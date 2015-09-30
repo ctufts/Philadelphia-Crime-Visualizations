@@ -44,23 +44,9 @@ server <- function(input, output, session) {
                         lat = ~POINT_Y, lng = ~POINT_X,
                   clusterOptions = markerClusterOptions()
       )
-    #filter(points, month == ts$counter)
+
   })
-  output$mapAnimation <- renderLeaflet({
-    
-    points <- filter(coordinates, 
-                     TEXT_GENERAL_CODE == input$crime.type.map & 
-                       year %in% input$year.map)
-    
-    leaflet() %>%
-      addProviderTiles('CartoDB.Positron') %>%
-      setView(lng=-75.06048, lat=40.03566, zoom = 11) %>%
-      addCircleMarkers( data = points,
-                        lat = ~POINT_Y, lng = ~POINT_X,
-                        clusterOptions = markerClusterOptions()
-      )
-    #filter(points, month == ts$counter)
-  }) 
+
  
 
 }
