@@ -1,0 +1,13 @@
+rm(list = ls())
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(RColorBrewer)
+library(leaflet)
+source('fte_theme.R')
+
+event.log <- read.csv('data/eventLog_2006to2014.csv')
+coordinates <- read.csv('data/coordinates.csv')
+coordinates$DISPATCH_DATE_TIME <- ymd_hms(coordinates$DISPATCH_DATE_TIME)
+crime.type <- unique(as.character(event.log$TEXT_GENERAL_CODE))
+unique.years <- unique(event.log$year)
