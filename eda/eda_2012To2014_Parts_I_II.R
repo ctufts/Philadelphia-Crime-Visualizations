@@ -6,6 +6,7 @@ library(RColorBrewer)
 library(leaflet)
 library(zoo)
 source('fte_theme.R')
+source('multiplot.R')
 
 ds <- read.csv('data/PPD_Crime_Incidents_2012-2014.csv')
 ds$Dispatch.Date.Time <- mdy_hms(ds$Dispatch.Date.Time)
@@ -39,11 +40,24 @@ for( i in 1:length(unique.crimes)){
                               trend = as.numeric(z.decomp$trend),
                               figure = as.numeric(rep(z.decomp$figure,3)),
                               type = rep(z.decomp$type, 36),
-                              crime = as.character(temp$General.Crime.Category))
+                              crime = as.character(temp$General.Crime.Category), 
+                              date  = temp$Dispatch.Date)
                    
                    )
-    # plot(z.decomp)
+    
   }
 }
 
-
+for(i in unique(ts.df$crime)){
+  temp <- filter(ts.df, crime == i)
+  g.season <- ggplot(temp, aes(x = date, seasonal)) + 
+    geom_point(color = "#E4002B") + geom_line(color = "#7A99AC") + fte_theme() +
+    theme(axis.ticks = element_blank(), axis.text.x = element_blank()) + 
+    labs(title = i)
+  g.trend  <- ggplot(temp, aes(x = date, trend)) + 
+    geom_point(color = "#E4002B") + geom_line(color = "#7A99AC") + fte_theme()
+  g.x      <- ggplot(temp, aes(x = date, x)) +
+    geom_point(color = "#E4002B") + geom_line(color = "#7A99AC") + fte_theme() +
+    theme(axis.ticks = element_blank(), axis.text.x = element_blank())
+  multiplot(g.x, g.season, g.trend)
+}
