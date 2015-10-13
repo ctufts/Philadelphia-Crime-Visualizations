@@ -4,7 +4,6 @@ library(ggplot2)
 library(lubridate)
 library(RColorBrewer)
 library(leaflet)
-library(zoo)
 source('fte_theme.R')
 source('multiplot.R')
 
