@@ -4,6 +4,7 @@ library(ggplot2)
 library(lubridate)
 library(RColorBrewer)
 library(leaflet)
+library(stringr)
 source('fte_theme.R')
 source('multiplot.R')
 
@@ -21,6 +22,18 @@ event.log <-  ds %>% group_by(General.Crime.Category,
     events = n()
   )
 
+# clean up coordinates
+
+ds$Coordinates<- gsub(")", "", ds$Coordinates)
+ds$Coordinates<- gsub("\\(", "", ds$Coordinates)
+coord.list <- (str_split(ds$Coordinates, ","))
+y <- as.numeric(unlist(lapply(coord.list, function(x)x[1])))
+x <- as.numeric(unlist(lapply(coord.list, function(x)x[2])))
+coordinates <- data.frame(POINT_Y = y,
+                          POINT_X = x,
+                          General.Crime.Category = ds$General.Crime.Category
+)
+coordinates <- na.omit(coordinates)
 # event.log <- read.csv('datadata/eventLog_2006to2014.csv')
 # coordinates <- read.csv('data/coordinates.csv')
 # coordinates$DISPATCH_DATE_TIME <- ymd_hms(coordinates$DISPATCH_DATE_TIME)

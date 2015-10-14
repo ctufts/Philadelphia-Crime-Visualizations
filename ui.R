@@ -35,21 +35,20 @@ ui <- shinyUI(
           # fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
         )
       )
-    )
-#   tabPanel("Map",
-#            sidebarLayout(
-#              sidebarPanel(
-#                selectInput("crime.type.map", "Crime Description", 
-#                            choices = crime.type, selected = crime.type[1]),
-#                selectInput("year.map", "Year",
-#                            choices = unique.years, selected = unique.years[1])
-#              ),
-#              mainPanel( 
-#                fluidRow(column(leafletOutput("mymap"), width = 11)),
-#                fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
-#              )
-#            )
-#   )
+    ),
+  tabPanel("Map",
+           sidebarLayout(
+             sidebarPanel(
+               selectInput("crime.type.map", "Crime Description", 
+                           choices = crime.type, selected = crime.type[1])
+               
+             ),
+             mainPanel( 
+               fluidRow(column(leafletOutput("mymap"), width = 11)),
+               fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
+             )
+           )
+  )
   
   )
 )
