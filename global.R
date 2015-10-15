@@ -6,10 +6,16 @@ library(RColorBrewer)
 library(leaflet)
 library(stringr)
 library(rgdal)
+library(readr)
 source('fte_theme.R')
 source('multiplot.R')
 
-ds  <- read.csv('data/PPD_Crime_Incidents_2012-2014.csv')
+ds  <- read_csv('data/PPD_Crime_Incidents_2012-2014.csv')
+names(ds)[3] <- 'Dispatch.Date.Time'
+names(ds)[7] <- 'General.Crime.Category'
+
+ds <- filter(ds, General.Crime.Category != 'All Other Offenses' )
+ds$General.Crime.Category[ds$General.Crime.Category == "DRIVING UNDER THE INFLUENCE"] <- "DUI"
 ds$Dispatch.Date.Time <- mdy_hms(ds$Dispatch.Date.Time)
 ds$Dispatch.Date <- as.Date(ds$Dispatch.Date.Time)
 day(ds$Dispatch.Date) <- 1 
@@ -33,7 +39,8 @@ x <- as.numeric(unlist(lapply(coord.list, function(x)x[2])))
 coordinates <- data.frame(POINT_Y = y,
                           POINT_X = x,
                           General.Crime.Category = ds$General.Crime.Category,
-                          District = ds$District
+                          District = ds$District,
+                          Dispatch.Date = ds$Dispatch.Date.Time
 )
 coordinates <- na.omit(coordinates)
 coordinates$District[coordinates$District==23] <- 22

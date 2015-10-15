@@ -13,50 +13,43 @@ ui <- shinyUI(
   navbarPage("Philadelphia Crime Statistics",
              theme = "style.css", 
              # includeCSS("map.css"),
-
-  ## Sidebar content
-  tabPanel("Map",
-           div(class="outer",
-               
-           leafletOutput("mymap", width="100%", height="100%"),
-           absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
-                         draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
-                         width = 330, height = "auto",
+             
+             ## Sidebar content
+             tabPanel("Map",
+                      div(class="outer",
+                          
+                          leafletOutput("mymap", width="100%", height="100%"),
+                          absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                                        draggable = F, top = 60, left = "auto", right = 20, bottom = "auto",
+                                        width = "300", height = "auto",
+                                        selectInput("crime.type.map", "Crime Description", 
+                                                    choices = crime.type, selected = crime.type[1])
+                                        
+                                        
+                          )
                          
-                         h2("Select Crime Type"),
-                         selectInput("crime.type.map", "Crime Description", 
-                                      choices = crime.type, selected = crime.type[1])
-                         
-                         
-           )
-#              mainPanel( 
-#                fluidRow(column(leafletOutput("mymap"), width = 11)),
-#                fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
-#              )
-#           )
-      )
-  ),
-    tabPanel("Crime Trends",
-      sidebarLayout(
-        sidebarPanel(
-          # menuItem("Widgets", tabName = "widgets", icon = icon("th")),
-          selectInput("crime.type", "Crime Description", 
-                      choices = crime.type[crime.type != 'Homicide - Gross Negligence' &
-                                             crime.type != 'Homicide - Justifiable'],
-                      selected = crime.type[1]),
-          includeMarkdown('references.Rmd')
-          
-        ),
-        mainPanel( 
-          fluidRow(column(plotOutput("original.signal", height = "150px"),width = 11)),
-          p(),
-          fluidRow(column(plotOutput("trend", height = "150px"), width = 11)),
-          p(), 
-          fluidRow(column(plotOutput("season", height = "150px"), width = 11))
-          # fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
-        )
-      )
-    )
-  
+                      )
+             ),
+             tabPanel("Crime Trends",
+                      sidebarLayout(
+                        sidebarPanel(
+                          selectInput("crime.type", "Crime Description", 
+                                      choices = crime.type[crime.type != 'Homicide - Gross Negligence' &
+                                                             crime.type != 'Homicide - Justifiable'],
+                                      selected = crime.type[1]),
+                          includeMarkdown('references.Rmd'),
+                          width = 3
+                          
+                        ),
+                        mainPanel( 
+                          fluidRow(column(plotOutput("original.signal", height = "200px"),width = 11)),
+                          p(),
+                          fluidRow(column(plotOutput("trend", height = "200px"), width = 11)),
+                          p(), 
+                          fluidRow(column(plotOutput("season", height = "200px"), width = 11))
+                        )
+                      )
+             )
+             
   )
 )

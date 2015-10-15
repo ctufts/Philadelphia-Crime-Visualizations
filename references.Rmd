@@ -1,11 +1,11 @@
 ---
 title: "references"
 author: "Chris Tufts"
-date: "September 24, 2015"
+date: "October 15, 2015"
 output: html_document
 ---
 
-This app provides a visualization of Philadelphia crime data from 2006-2014. The data is available via [OpenDataPhilly](https://www.opendataphilly.org/dataset/philadelphia-police-part-one-crime-incidents). The points represent the number of crime occurences in each month while the line is the general trend over the course of the selected year. 
+This app provides a visualization of Philadelphia crime data (Parts I and II) spanning 2012-2014. The data is available via [OpenDataPhilly](https://www.opendataphilly.org/dataset/crime-incidents/resource/d8e013b7-748a-4592-9688-897b4ea2290e). All entries labeled as 'All Other Offenses' were removed prior to processing. The seasonal and trend components of the monthly incident counts are calculated using an additive model and moving average filter.  
 
 Created by Chris Tufts 2015.
 

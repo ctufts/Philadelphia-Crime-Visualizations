@@ -28,7 +28,7 @@ server <- function(input, output, session) {
     output$original.signal <- renderPlot({
        ggplot(z.decomp, aes(x = Dispatch.Date, x)) +
         geom_point(color = "#E4002B", size = 3) + geom_line(color = "#7A99AC") +
-        labs(x = 'Date', y = 'Incidents', title = 'Total Incidents') + fte_theme() +
+        labs(x = 'Date', y = 'Incidents', title = 'Incidents: Raw Monthly Counts') + fte_theme() +
         scale_x_date(labels=date_format('%m/%y'))
       
   
@@ -36,25 +36,24 @@ server <- function(input, output, session) {
     output$trend  <- renderPlot({
      ggplot(z.decomp, aes(x = Dispatch.Date, trend)) + 
         geom_point(color = "#E4002B") + geom_line(color = "#7A99AC") +
-        labs(x = 'Date', y = 'Incidents', title = 'Trend') + fte_theme() +
+        labs(x = 'Date', y = 'Incidents', title = 'Trend Component') + fte_theme() +
         scale_x_date(labels=date_format('%m/%y'))
       
     })
     output$season  <- renderPlot({
       ggplot(z.decomp, aes(x = Dispatch.Date, seasonal)) + 
         geom_point(color = "#E4002B") + geom_line(color = "#7A99AC") + 
-        labs(x = 'Date', y = 'Incidents', title = 'Seasonal Trend') + fte_theme() + 
+        labs(x = 'Date', y = 'Incidents', title = 'Seasonal Component') + fte_theme() + 
         scale_x_date(labels=date_format('%m/%y')) 
       
     })
   
   })
   
+  
   output$mymap <- renderLeaflet({
     
-#     points <- filter(coordinates, 
-#                      General.Crime.Category == input$crime.type.map)
-#     
+ 
     
     district.counts <- filter(district.log, General.Crime.Category == input$crime.type.map) %>% 
       arrange(District)
@@ -65,6 +64,9 @@ server <- function(input, output, session) {
       palette = "Greys",
       domain = district.counts$events
     )
+    
+
+    
     leaflet() %>%
       addProviderTiles('CartoDB.Positron') %>%
       setView(lng=-75.16048, lat=39.99000, zoom =11) %>%
@@ -79,20 +81,11 @@ server <- function(input, output, session) {
                 opacity = 1
       )%>%
       addCircles(lat = point.coord$POINT_Y, lng = point.coord$POINT_X,
-                 fillOpacity = 0.8 , opacity = 0.8, radius = 3, fillColor = "#F0F340",
-                 color = "#6A727B",
-                 popup = sapply(point.coord$District, function(x) paste("District: ", x)))    
-#     
-#     leaflet() %>%
-#       addProviderTiles('CartoDB.Positron') %>%
-#       setView(lng=-75.06048, lat=40.03566, zoom = 11) %>%
-#       addCircleMarkers( data = points,
-#                         lat = ~POINT_Y, lng = ~POINT_X,
-#                   clusterOptions = markerClusterOptions()
-#       )
+                 fillOpacity = 0.8 , opacity = 0.8, radius = 8, fillColor = "#F0F340",
+                 color = "#6A727B", weight = 1,
+                 popup = paste("District:",point.coord$District, "<br/> Time:", point.coord$Dispatch.Date))    
+
 
   })
-
- 
 
 }
