@@ -52,16 +52,44 @@ server <- function(input, output, session) {
   
   output$mymap <- renderLeaflet({
     
-    points <- filter(coordinates, 
-                     General.Crime.Category == input$crime.type.map)
+#     points <- filter(coordinates, 
+#                      General.Crime.Category == input$crime.type.map)
+#     
     
+    district.counts <- filter(district.log, General.Crime.Category == input$crime.type.map) %>% 
+      arrange(District)
+    
+    point.coord <- filter(coordinates, General.Crime.Category == input$crime.type.map)
+
+    pal <- colorNumeric(
+      palette = "Greys",
+      domain = district.counts$events
+    )
     leaflet() %>%
       addProviderTiles('CartoDB.Positron') %>%
-      setView(lng=-75.06048, lat=40.03566, zoom = 11) %>%
-      addCircleMarkers( data = points,
-                        lat = ~POINT_Y, lng = ~POINT_X,
-                  clusterOptions = markerClusterOptions()
-      )
+      setView(lng=-75.16048, lat=39.99000, zoom =11) %>%
+      addPolygons(data = districts,
+                  stroke = T, smoothFactor = 0.2, fillOpacity = 0.5,
+                  color = "#000000", weight = 2, 
+                  fillColor = ~pal(district.counts$events)
+                  # color = ~pal(states@data$DISTRICT_)
+      )%>% 
+      addLegend("bottomright", pal = pal, values = district.counts$events,
+                title = "Incidents 2012-2014",
+                opacity = 1
+      )%>%
+      addCircles(lat = point.coord$POINT_Y, lng = point.coord$POINT_X,
+                 fillOpacity = 0.8 , opacity = 0.8, radius = 3, fillColor = "#F0F340",
+                 color = "#6A727B",
+                 popup = sapply(point.coord$District, function(x) paste("District: ", x)))    
+#     
+#     leaflet() %>%
+#       addProviderTiles('CartoDB.Positron') %>%
+#       setView(lng=-75.06048, lat=40.03566, zoom = 11) %>%
+#       addCircleMarkers( data = points,
+#                         lat = ~POINT_Y, lng = ~POINT_X,
+#                   clusterOptions = markerClusterOptions()
+#       )
 
   })
 

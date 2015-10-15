@@ -15,6 +15,27 @@ ui <- shinyUI(
              # includeCSS("map.css"),
 
   ## Sidebar content
+  tabPanel("Map",
+           div(class="outer",
+               
+           leafletOutput("mymap", width="100%", height="100%"),
+           absolutePanel(id = "controls", class = "panel panel-default", fixed = TRUE,
+                         draggable = TRUE, top = 60, left = "auto", right = 20, bottom = "auto",
+                         width = 330, height = "auto",
+                         
+                         h2("Select Crime Type"),
+                         selectInput("crime.type.map", "Crime Description", 
+                                      choices = crime.type, selected = crime.type[1])
+                         
+                         
+           )
+#              mainPanel( 
+#                fluidRow(column(leafletOutput("mymap"), width = 11)),
+#                fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
+#              )
+#           )
+      )
+  ),
     tabPanel("Crime Trends",
       sidebarLayout(
         sidebarPanel(
@@ -35,20 +56,7 @@ ui <- shinyUI(
           # fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
         )
       )
-    ),
-  tabPanel("Map",
-           sidebarLayout(
-             sidebarPanel(
-               selectInput("crime.type.map", "Crime Description", 
-                           choices = crime.type, selected = crime.type[1])
-               
-             ),
-             mainPanel( 
-               fluidRow(column(leafletOutput("mymap"), width = 11)),
-               fluidRow(column(includeMarkdown('references.Rmd'), width = 11))
-             )
-           )
-  )
+    )
   
   )
 )
